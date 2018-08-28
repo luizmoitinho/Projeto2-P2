@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1534553867 source:c:\users\luizinho\desktop\consulta-7.0\consultas\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1534554391 c:\users\luizinho\desktop\consulta-7.0\consultas\design.h
+
+1534558505 c:\users\luizinho\desktop\consulta-7.0\consultas\consultas.h
+
+1534554712 c:\users\luizinho\desktop\consulta-7.0\consultas\structs.h
+
+1535416483 source:c:\users\luizinho\desktop\consulta-7.0\consultas-7.5\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535418554 c:\users\luizinho\desktop\consulta-7.0\consultas-7.5\structs.h
+
+1535132618 c:\users\luizinho\desktop\consulta-7.0\consultas-7.5\design.h
+
+1535419470 c:\users\luizinho\desktop\consulta-7.0\consultas-7.5\consultas.h
+
