@@ -1,12 +1,9 @@
-
 void dados(int cpf);
 void cadConsulta(char cpfCli[],int cpfSec);
 void cadastraClientes();
-void cadAlerta();
 void agendaConsulta(char cpfCli[],int cpfSec);
 void mostraConsulta(char cpfCli[],int cpfSec);
 void mostraInfCliente(char cpf[],int cpfSec);//aqui o cpf não pode ser por referencia, Wedson!!
-
 
 
 void agendaConsulta(int cpfSec){
@@ -18,6 +15,7 @@ void agendaConsulta(int cpfSec){
   logo();
   barraNotificacao();
   dados(cpfSec);
+
   criaMenu(3,80,10,16,COR_LOGO,COR_LETRA2);
   gotoxy(47,17);
   cout<<"CONSULTAS";
@@ -29,6 +27,7 @@ void agendaConsulta(int cpfSec){
   gotoxy(51,22);
   cin.getline(cpfCli,12);
   cadConsulta(cpfCli,cpfSec);
+
   getch();
 }
 
@@ -48,13 +47,13 @@ void dados(int cpfSec){
     }
   arquivo.close();
 
-  criaMenu(2,30,5,7,COR_LOGO,COR_LETRA2);
+  criaMenu(3,30,5,7,COR_LOGO,COR_LETRA2);
   gotoxy(17,8);
   cout<<"Dados";
-  criaMenu(4,30,5,9,COR_LETRA2,COR_LETRA1);
-  gotoxy(7,10);
-  cout<<"Nome  : "<<lerSecretaria.nome;
+  criaMenu(5,30,5,10,COR_LETRA2,COR_LETRA1);
   gotoxy(7,11);
+  cout<<"Nome  : "<<lerSecretaria.nome;
+  gotoxy(7,12);
   cout<<"CPF   : "<<lerSecretaria.cpf;
 
 }
@@ -70,8 +69,10 @@ void cadConsulta(char cpfCli[],int cpfSec){
     logo();
     barraNotificacao();
     dados(cpfSec);
-    int localizado=0;
+
     cliente lerClientes;
+
+    int localizado=0;
     fstream verificaCadastro;
     verificaCadastro.open("clientes.txt", ios::in);
     if(verificaCadastro.fail())
@@ -82,150 +83,141 @@ void cadConsulta(char cpfCli[],int cpfSec){
                   localizado=1;
                   break;
               }
-              verificaCadastro.read((char*)(&lerClientes),sizeof(cliente));
+              verificaCadastro.read((char*)(&lerClientes), sizeof(cliente));
           }
           if (localizado==1){
               /*
-                Area destinada : Erick, Wedson, Daniel e Luiz
+                Area destina a : Erick, Wedson, Daniel e Luiz
               */
               agendaConsulta(cpfCli,cpfSec);
           }
           else{
             /*
-            Area destinada : Liliane, ALessandra e Jessica
+            Area destinada a : Liliane, ALessandra e Jessica
             */
-            cadAlerta();
             cadastraClientes();
-            agendaConsulta(cpfCli,cpfSec);
           }
+
  }
 
-void cadAlerta(){
-  criaMenu(5,93,5,16,COR_LETRA2,LIGHTRED);
-  gotoxy(30,18);
-  cout<<"O CPF informado não foi encontrado no sistema!!";
-  Sleep(2000);
-
-}
-
-void cadastraClientes(){
-  cliente cadCliente;
-  ofstream preencheArquivo;
-  int *tam;
-  tam = new int(0);
+ void cadastraClientes(){
+    cliente cadClientes;
     fflush(stdin);
+
         //CRIA CAIXA ATRÁS
-        criaMenu(20,93,5,16,COR_LETRA2,COR_LETRA1);
+        criaMenu(14,93,5,16,COR_LETRA2,COR_LETRA1);
 
-        criaMenu(3,93,5,15,COR_LOGO,COR_LETRA2);
-        gotoxy(38,16);
-        cout<<"CADASTRAR CLIENTES";
-
-        criaMenu(1,15,6,20,COR_LOGO,COR_LETRA2);
-        gotoxy(7,20);
+        criaMenu(1,15,6,17,COR_LOGO,COR_LETRA1);
+        gotoxy(7,17);
         cout << "NOME COMPLETO ";
+        criaMenu(1,1,22,17,COR_FUNDO,COR_LETRA2);
+        gotoxy(22,17);
+        cin.getline(cadClientes.nome,40);
 
-        criaMenu(1,6,6,22,COR_LOGO,COR_LETRA2);
-        gotoxy(7,22);
+        criaMenu(1,5,6,19,COR_LOGO,COR_LETRA1);
+        gotoxy(7,19);
+        cout << "CPF ";
+        criaMenu(1,1,12,19,COR_FUNDO,COR_LETRA2);
+        gotoxy(12,19);
+        cin.getline(cadClientes.cpf, 12);
+
+        criaMenu(1,6,6,21,COR_LOGO,COR_LETRA1);
+        gotoxy(7,21);
         cout << "SEXO ";
-        criaMenu(1,12,6,24,COR_LOGO,COR_LETRA2);
-        gotoxy(7,24);
+        criaMenu(1,1,13,21,COR_FUNDO,COR_LETRA2);
+        gotoxy(13,21);
+        cin.getline(cadClientes.sexo,15);
+
+        criaMenu(1,12,6,23,COR_LOGO,COR_LETRA1);
+        gotoxy(7,23);
         cout << "NASCIMENTO ";
-        criaMenu(1,12,6,26,COR_LOGO,COR_LETRA2);
-        gotoxy(7,26);
+        criaMenu(1,1,19,23,COR_FUNDO,COR_LETRA2);
+        gotoxy(19,23);
+        cin.getline(cadClientes.dataNasc,15);
+
+        criaMenu(1,10,6,25,COR_LOGO,COR_LETRA1);
+        gotoxy(7,25);
+        cout << "TELEFONE ";
+        criaMenu(1,1,17,25,COR_FUNDO,COR_LETRA2);
+        gotoxy(17,25);
+        cin.getline(cadClientes.telefone,20);
+
+        criaMenu(1,13,6,27,COR_LOGO,COR_LETRA1);
+        gotoxy(7,27);
         cout << "NOME PAI ";
-        criaMenu(1,12,6,28,COR_LOGO,COR_LETRA2);
-        gotoxy(7,28);
+        criaMenu(1,1,20,27,COR_FUNDO,COR_LETRA2);
+        gotoxy(20,27);
+        cin.getline(cadClientes.nomePai,40);
+
+        criaMenu(1,13,6,29,COR_LOGO,COR_LETRA1);
+        gotoxy(7,29);
         cout << "NOME MÃE ";
+        criaMenu(1,1,20,29,COR_FUNDO,COR_LETRA2);
+        gotoxy(20,29);
+        cin.getline(cadClientes.nomeMae,40);
 
-        criaMenu(1,10,50,20,COR_LOGO,COR_LETRA2);
-        gotoxy(51,20);
+        criaMenu(1,10,46,17,COR_LOGO,COR_LETRA1);
+        gotoxy(47,17);
         cout << "ENDEREÇO ";
+        criaMenu(1,1,57,17,COR_FUNDO,COR_LETRA2);
+        gotoxy(57,17);
+        cin.getline(cadClientes.endRua,40);
 
-        criaMenu(1,8,50,22,COR_LOGO,COR_LETRA2);
-        gotoxy(51,22);
+        criaMenu(1,8,46,19,COR_LOGO,COR_LETRA1);
+        gotoxy(47,19);
         cout << "BAIRRO ";
+        criaMenu(1,1,55,19,COR_FUNDO,COR_LETRA2);
+        gotoxy(55,19);
+        cin.getline(cadClientes.endBairro,30);
 
-        criaMenu(1,4,84,20,COR_LOGO,COR_LETRA2);
-        gotoxy(85,20);
+        criaMenu(1,4,84,19,COR_LOGO,COR_LETRA1);
+        gotoxy(85,19);
         cout << "UF ";
+        criaMenu(1,1,89,19,COR_FUNDO,COR_LETRA2);
+        gotoxy(89,19);
+        cin.getline(cadClientes.UF,3);
 
-        criaMenu(1,8,50,24,COR_LOGO,COR_LETRA2);
-        gotoxy(51,24);
-        cout << "CIDADE";
+        criaMenu(1,8,46,21,COR_LOGO,COR_LETRA1);
+        gotoxy(47,21);
+        cout << "CIDADE ";
+        criaMenu(1,1,55,21,COR_FUNDO,COR_LETRA2);
+        gotoxy(55,21);
+        cin.getline(cadClientes.cidade,25);
 
-        criaMenu(1,5,76,24,COR_LOGO,COR_LETRA2);
-        gotoxy(76,24);
-        cout << " CEP ";
+        criaMenu(1,5,70,21,COR_LOGO,COR_LETRA1);
+        gotoxy(71,21);
+        cout << "CEP ";
+        criaMenu(1,1,76,21,COR_FUNDO,COR_LETRA2);
+        gotoxy(76,21);
+        cin.getline(cadClientes.cep,10);
 
-        criaMenu(1,8,50,26,COR_LOGO,COR_LETRA2);
-        gotoxy(51,26);
+        criaMenu(1,8,46,23,COR_LOGO,COR_LETRA1);
+        gotoxy(47,23);
         cout << "E-MAIL ";
+        criaMenu(1,1,55,23,COR_FUNDO,COR_LETRA2);
+        gotoxy(55,23);
+        cin.getline(cadClientes.email,40);
 
-        criaMenu(1,13,50,28,COR_LOGO,COR_LETRA2);
-        gotoxy(51,28);
+        criaMenu(1,13,46,25,COR_LOGO,COR_LETRA1);
+        gotoxy(47,25);
         cout << "OBSERVAÇÕES ";
+        criaMenu(1,1,60,25,COR_FUNDO,COR_LETRA2);
+        gotoxy(60,25);
 
+        //if (strlen(cadClientes.obs) > )
+        //  cout<<"\n";
+        cin.getline(cadClientes.obs,50);
 
-      //entrada de dados
-        criaMenu(1,20,22,20,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,15,22,22,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,15,22,24,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,20,22,26,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,20,22,28,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,20,62,20,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,20,62,22,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,5,89,20,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,12,62,24,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,11,82,24,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,25,62,26,COR_FUNDO,COR_LETRA1);
-        criaMenu(1,20,64,28,COR_FUNDO,COR_LETRA1);
-
-        gotoxy(23,20);
-        cin.getline(cadCliente.nome,40);
-        gotoxy(23,22);
-        cin.getline(cadCliente.sexo,15);
-        gotoxy(23,24);
-        cin.getline(cadCliente.dataNasc,12);
-        gotoxy(23,26);
-        cin.getline(cadCliente.nomePai,40);
-        gotoxy(23,28);
-
-        cin.getline(cadCliente.nomePai,40);
-        gotoxy(63,20);
-        cin.getline(cadCliente.endRua,40);
-        gotoxy(89,20);
-        cin.getline(cadCliente.UF,3);
-        gotoxy(63,22);
-        cin.getline(cadCliente.endBairro,30);
-        gotoxy(63,24);
-        cin.getline(cadCliente.cidade,25);
-        gotoxy(82,24);
-        cin.getline(cadCliente.cep,10);
-        gotoxy(63,26);
-        cin.getline(cadCliente.email,40);
-        gotoxy(65,28);
-        cin.getline(cadCliente.obs,50);
-
-        preencheArquivo.open("clientes.txt", ios::in|ios::out|ios::app);
-          preencheArquivo.write((const char*)(&cadCliente), sizeof(cliente));
-        preencheArquivo.close();
-
-        criaMenu(2,20,64,33,COR_LETRA2,GREEN);
-        gotoxy(30,33);
-        cout<<"CADASTRO FINALIZADO COM SUCESSO!!";
-        Sleep(2000);
+        fstream arquivo;
+        arquivo.open("clientes.txt", ios::in | ios::out);
+        arquivo.write((const char*) (&cadClientes), sizeof(cliente));
+        arquivo.close();
 }
+
 
 void agendaConsulta(char cpfCli[],int cpfSec){
-    textbackground(COR_FUNDO);
-    clrscr();
-    textcolor(BLACK);
-    logo();
-    barraNotificacao();
-    dados(cpfSec);
-    criaMenu(3,80,10,16,COR_LOGO,COR_LETRA2);
-    gotoxy(47,17);
+
+
     char  *opc;
     char espec[20];
     opc = new char;
@@ -264,15 +256,18 @@ void mostraInfCliente(char cpfCli[],int cpfSec){
     ifstream lerCliente;
     lerCliente.open("clientes.txt", ios::in);
     cliente testeclientes;
-    textcolor(COR_LETRA2);
+
     //MOSTRAR INFORMAÇÃO DO CLIENTE
     while( lerCliente && !lerCliente.eof()){
         if(strcmp(testeclientes.cpf, cpfCli) == 0){
-        gotoxy(20,17);
-        cout << "NOME: " << testeclientes.nome << endl;
-        gotoxy(20,18);
-        cout << "CPF: " << testeclientes.cpf << endl;
-        getch();
+        criaMenu(3,30,44,7,COR_LOGO,COR_LETRA2);
+        gotoxy(53,8);
+        cout<<"Dados Cliente";
+        criaMenu(5, 30, 44, 10, COR_LETRA2, COR_LETRA1);
+        gotoxy(46,11);
+        cout << "NOME : " << testeclientes.nome << endl;
+        gotoxy(46,12);
+        cout << "CPF  : " << testeclientes.cpf << endl;
         }
         lerCliente.read((char *) (&testeclientes), sizeof(cliente));
     }
@@ -331,7 +326,7 @@ void mostraConsulta(char cpfCli[],int cpfSec){
       lerConsultas.read((char *) (&testeclinica), sizeof(clinica));
         while( lerConsultas && !lerConsultas.eof()){
             if( strcmp(testeclinica.especialidade, espec) == 0){
-                criaMenu(1, 5 , 7 + cont1,17, COR_LOGO, COR_LETRA1);
+                criaMenu(1, 5, 7 + cont1,17, COR_LOGO, COR_LETRA1);
                 gotoxy(7 + cont1,17);
                 cout << "NOME: " << testeclinica.nome;
                 criaMenu(1, 4, 7 + cont1,18, COR_LOGO, COR_LETRA1);
@@ -341,7 +336,6 @@ void mostraConsulta(char cpfCli[],int cpfSec){
                 gotoxy(7 + cont1,19);
                 cout <<"HORARIO: " << testeclinica.turno;
                 cont1 = cont1 + 20;
-
             }
             lerConsultas.read((char *) (&testeclinica), sizeof(clinica));
           }
