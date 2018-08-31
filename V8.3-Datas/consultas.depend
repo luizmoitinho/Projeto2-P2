@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1535679598 source:c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535563449 c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\structs.h
+
+1535132618 c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\design.h
+
+1535714320 c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\consultas.h
+
