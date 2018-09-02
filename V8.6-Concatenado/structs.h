@@ -40,8 +40,8 @@ typedef struct{
 typedef struct{
   int crm;
   char cpfCli[12];
-  char data[10];
-  char diaConsulta[1];
   char dataConsulta[10];
   int turno;
+  int ativo;
+  int tipoConsulta; // se  1 = retorno, se 2 = consulta
 }consulta;

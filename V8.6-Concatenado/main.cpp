@@ -2,12 +2,14 @@
 #include <windows.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include<sstream>
+
 #include <fstream>
+
 #include <conio2.h>
 
 #include<time.h>
-
 
 using namespace std;
 #include"structs.h"

@@ -4,13 +4,48 @@ void cadastraClientes(char cpfCli[]);
 void agendaConsulta(char cpfCli[],int cpfSec);
 int mostraConsulta(int cpfSec,char cpfCli[],int &cont1);
 void mostraInfCliente(char cpf[],int cpfSec);//aqui o cpf não pode ser por referencia, Wedson!!
-void dataConsulta(int crm,char cpfCli[],int cpfSec,int cont);
-void tratamentoData(int &diaU, int &mesU, int &anoU,int &cont);
-void dateSystem(string &diaS, string &mesS, string &anoS);
 int converterParaInt(string str);
-void dia31(int &diaU,int mesU,int anoU,int cont);
-void dia30(int &diaU,int mesU,int anoU,int cont);
-bool dma(int &diaU, int &mesU, int &anoU,int cont);
+void dataConsulta(int crm,char cpfCli[],int cpfSec,int cont,int *opc);
+void tratamentoData(int &diaU, int &mesU, int &anoU,int cont);
+void dma(int &diaU, int &mesU, int &anoU, int cont, int p);
+void reagendarConsulta(char cpfCli[], int cpfSec);
+void pagamento(int cr,int cont);
+
+
+namespace data {
+int converterParaInt(string str);
+  void dateSystem(int &diaC, int &mesC, int &anoC){
+      char dataAtual[9];
+      _strdate(dataAtual);
+      string diaS, mesS, anoS;
+      for(int i=0; i<9; i++)
+      {
+          if (dataAtual[i]!='/')
+          {
+              if(i<2)
+                  mesS+=dataAtual[i];
+              else if(i<5)
+                  diaS+=dataAtual[i];
+              else
+                  anoS+=dataAtual[i];
+          }
+      }
+      diaC=converterParaInt(diaS);
+      mesC=converterParaInt(mesS);
+      anoC=converterParaInt(anoS);
+  }
+
+  int converterParaInt(string str){
+    std::istringstream iss(str);
+    int retorno;
+    iss >> retorno;
+    return retorno;
+}
+
+}
+using namespace data;
+
+
 
 
 void consultas(int cpfSec){
@@ -299,11 +334,12 @@ void cadastraClientes(char cpfCli[]){
 }
 
 
+
 void agendaConsulta(char cpfCli[],int cpfSec){
     int crm,cont=0;
-    char  *opc;
+    int  *opc;
     char espec[20];
-    opc = new char;
+    opc = new int;
 
     criaMenu(4,93,5,16,COR_LOGO,COR_LETRA2);
     gotoxy(50 - (6/2), 17);
@@ -326,17 +362,23 @@ void agendaConsulta(char cpfCli[],int cpfSec){
         cin >> *opc;
 
         switch(*opc){
-            case '1':
+            case 1:
+
                 crm = mostraConsulta(cpfSec,cpfCli,cont);
-                dataConsulta(crm,cpfCli,cpfSec,cont);
+                *opc =1;
+                dataConsulta(crm,cpfCli,cpfSec,cont,opc);
             break;
 
-            case '2':
-            //reagendar consulta
+            case 2:
+                //reagendar consulta
+                *opc =1;
+                reagendarConsulta(cpfCli,cpfSec);
             break;
 
-            case '3':
-            //agendar retorno
+            case 3: // Retorno
+                *opc =2;
+                crm = mostraConsulta(cpfSec,cpfCli,cont);
+                dataConsulta(crm,cpfCli,cpfSec,cont,opc);
             break;
 
             default:
@@ -349,9 +391,9 @@ void agendaConsulta(char cpfCli[],int cpfSec){
                 criaMenu(3,8,61,24,COR_LOGO,COR_LETRA2);
                 break;
         }
-    }while(*opc != '1' && *opc != '2' && *opc != '3');
-
+    }while(*opc != 1 && *opc != 2 && *opc != 3);
 }
+
 
 
 void mostraInfCliente(char cpfCli[],int cpfSec){
@@ -585,42 +627,32 @@ int mostraConsulta(int crm, char cpfCli[],int&cont1){
 }
 
 //=============================================================
-void dataConsulta(int crm, char cpfCli[],int cpfSec, int cont){
-     cliente lerCliente;
+
+void dataConsulta(int crm, char cpfCli[],int cpfSec, int cont, int *opc)
+{
+    cliente lerCliente;
     clinica dadoMedico;
     consulta insereConsulta, readConsulta;
     char cpf[12],consultaData[11];
-    int localizado=0,valida=0,turno,validaTurno=-1,numConsulta=0;
+    int localizado=0,valida=0,turno,validaTurno,numConsulta=0,formPag;
     int dia,mes,ano;
     char diaChar[2],mesChar[2],anoChar[2];
     fflush(stdin);
-    ifstream lerArquivo,lerConsulta;
+    ifstream lerArquivo;
     ofstream criaArquivo;
     fstream criaConsulta;
     cont+=20;
     criaMenu(10,93,5,cont,COR_LETRA2,COR_LETRA1);
-    gotoxy(37,cont);
-    cout<<"Informe a data da consulta";
     cont++;
-    criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
-    gotoxy(47,cont+1);
-    cout << "/";
-    gotoxy(52,cont+1);
-    cout << "/";
-    gotoxy(44,cont+1);
-    cin>>dia;
-    gotoxy(49,cont+1);
-    cin>>mes;
-    gotoxy(54,cont+1);
-    cin>>ano;
-    criaMenu(3,15,43,cont+3,COR_LETRA2,RED);
+
     tratamentoData(dia,mes,ano,cont);
+
     //marcar a consulta
     sprintf(consultaData,"%d%s%d%s%d",dia,"/",mes,"/",ano);
     //informar o turno
 //=====================================void dados(int cpf);=======================
     lerArquivo.open("consultas.txt",ios::in);
-    lerArquivo.read((char*)(&readConsulta),sizeof(consulta));
+        lerArquivo.read((char*)(&readConsulta),sizeof(consulta));
     while(lerArquivo && !lerArquivo.eof())
     {
         if((crm == readConsulta.crm)&&(strcmp(consultaData,readConsulta.dataConsulta)==0)&&(turno == readConsulta.turno))
@@ -631,6 +663,7 @@ void dataConsulta(int crm, char cpfCli[],int cpfSec, int cont){
 //=============================================================
     if(numConsulta>=5)
     {
+        textcolor(BLACK);
         gotoxy(32,cont+5);
         cout<<"Horário indisponivel!";
         Sleep(2000);
@@ -639,373 +672,396 @@ void dataConsulta(int crm, char cpfCli[],int cpfSec, int cont){
     else
     {
         lerArquivo.open("medicos.txt",ios::in);
-        lerArquivo.read((char*)(&dadoMedico), sizeof(clinica));
-        while(lerArquivo && !lerArquivo.eof())
-        {
-            if( crm== dadoMedico.crm)
-            {
-                validaTurno = dadoMedico.turno;
-            }
-            lerArquivo.read((char*)(&dadoMedico), sizeof(clinica));
-        }
+          lerArquivo.read((char*)(&dadoMedico), sizeof(clinica));
+          while(lerArquivo && !lerArquivo.eof())
+          {
+              if( crm== dadoMedico.crm){
+                  validaTurno = dadoMedico.turno;
+                  cout<<validaTurno;
+                  getch();
+                  break;
+              }
+              lerArquivo.read((char*)(&dadoMedico), sizeof(clinica));
+          }
         lerArquivo.close();
 
         if (validaTurno==0)
-        {
-            gotoxy(32,cont+5);
-            cout<<"Consulta marcada pela manhã";
-        }
-        else
-        {
-            if(validaTurno==1){
-                gotoxy(32,cont+5);
-                cout<<"Consulta marcada pela tarde";
-            }
-            else
-            {
+            pagamento(crm,cont);
+        else if(validaTurno==1)
+            pagamento(crm,cont);
+        else{
+
+               int opTurno;
                 do{
-                    fflush(stdin);
+                    criaMenu(20,93,5,cont+7,COR_LETRA2,COR_LETRA1);
+                    criaMenu(8,20,40,cont+8,COR_LOGO,COR_LETRA2);
                     gotoxy(45,cont+7);
                     cout<<"[0] - Manhã";
                     gotoxy(45,cont+8);
                     cout<<"[1] - Tarde";
                     gotoxy(42,cont+10);
                     cout<<"Digite o turno : ";
-                    cin>>validaTurno;
-                    if (validaTurno!=0 && validaTurno!=1)
+                    fflush(stdin);
+                    cin>>opTurno;
+                    if (opTurno<0 || opTurno>1)
                     {
                         gotoxy(45,cont+11);
                         cout<<"Turno inválido!";
                         Sleep(1000);
-                        gotoxy(45,cont+11);
-                        clreol();
-                    }
-                  }while(validaTurno!=0 && validaTurno!=1);
 
-                  if (validaTurno==0){
-                    gotoxy(45,cont+13);
+                        gotoxy(45,cont+11);
+                        cout<<"               ";
+                        gotoxy(42,cont+10);
+                        cout<<"                 ";
+
+                    }
+                  }while(opTurno<0 || opTurno>1);
+
+                   pagamento(crm,cont);
+                  if (opTurno==0){
                     cout<<"Consulta marcada pela manhã\n";
                   }
                   else{
-                    gotoxy(45,cont+13);
                     cout<<"Consulta marcada pela tarde\n";
                   }
             }
-                //fim do programa
-                cout<<"\n\n";
+
                 system("pause");
 
+
+                insereConsulta.tipoConsulta=*opc;
                 insereConsulta.crm=crm;
-                strcpy(insereConsulta.cpfCli,cpf);
+                strcpy(insereConsulta.cpfCli,cpfCli);
                 strcpy(insereConsulta.dataConsulta,consultaData);
                 insereConsulta.turno=validaTurno;
+
 
                 criaConsulta.open("consultas.txt",ios::in|ios::out|ios::app);
                     criaConsulta.write((const char*)(&insereConsulta),sizeof(consulta));
                 criaConsulta.close();
-        }
 
     }
 }
 
-void dateSystem(int &diaC, int &mesC, int &anoC){
-    char dataAtual[9];
-    _strdate(dataAtual);
-    string diaS, mesS, anoS;
-    for(int i=0; i<9; i++)
-    {
-        if (dataAtual[i]!='/')
-        {
-            if(i<2)
-                mesS+=dataAtual[i];
-            else if(i<5)
-                diaS+=dataAtual[i];
-            else
-                anoS+=dataAtual[i];
-        }
+void pagamento(int crm,int cont){
+  fstream readMed;
+  clinica lerMedicos;
+  double valorConsulta;
+  int formPag;
+  char opPagamento;
+  readMed.open("medicos.txt",ios::in);
+    readMed.read((char *)(&lerMedicos),sizeof(clinica));
+    while(readMed && !readMed.eof()){
+        if (crm == lerMedicos.crm)
+          break;
+      readMed.read((char *)(&lerMedicos),sizeof(clinica));
     }
-    diaC=converterParaInt(diaS);
-    mesC=converterParaInt(mesS);
-    anoC=converterParaInt(anoS);
+  readMed.close();
+  criaMenu(20,93,5,cont+9,COR_LETRA2,COR_LETRA1);
+  criaMenu(10,45,28,cont+7,COR_LOGO,COR_LETRA2);
+  gotoxy(35,cont+8);
+  cout<<"Valor da consulta : " <<valorConsulta ;
+  gotoxy(32,cont+10);
+  cout<<" [1] - À vista ";
+  gotoxy(32,cont+11);
+  cout<<" [2] - Parcelado [3x] ";
+  do{
+    gotoxy(35,cont+13);
+    cout<<"Informe a forma de pagamento : ";
+    cin>>formPag;
+    if (formPag!=1 && formPag!=2){
+        gotoxy(35,cont+15);
+        textcolor(YELLOW);
+        cout<<"Opção informada é inválida!!";
+        Sleep(2000);
+
+        gotoxy(35,cont+13);
+        cout<<"                                     ";
+        gotoxy(35,cont+15);
+        cout<<"                              ";
+
+        textcolor(COR_LETRA2);
+    }
+  }while(formPag!=1 && formPag!=2);
+  switch(formPag){
+    case 1:
+      fflush(stdin);
+      gotoxy(32,cont+14);
+      cout<<"Desejar confirmar o pagamento ? [s/n]:";
+      opPagamento = getchar();
+      if (opPagamento=='s'|| opPagamento=='S'){
+        for(int i=0;i<5;i++){
+          criaMenu(3,45,28,cont+17,BLUE,COR_LETRA2);
+          gotoxy(35,cont+18);
+          cout<<"PAGAMENTO EFETUADO COM SUCESSO!!";
+          Sleep(400);
+          criaMenu(3,45,28,cont+17,COR_LETRA2,BLUE);
+          gotoxy(35,cont+18);
+          cout<<"PAGAMENTO EFETUADO COM SUCESSO!!";
+          Sleep(400);
+        }
+          return;
+          exit(1);
+      }
+
+      else
+        pagamento(crm,cont);
+    break;
+    case 2:
+      int qtdParcelas;
+      fflush(stdin);
+      do{
+        criaMenu(6,45,28,cont+14,COR_LOGO,COR_LETRA2);
+        gotoxy(32,cont+14);
+        cout<<"Quantidade de parcelas [até 3x]: ";
+        cin>>qtdParcelas;
+        if (qtdParcelas<1 || qtdParcelas>3){
+             textcolor(YELLOW);
+          gotoxy(32,cont+16);
+          cout<<"Quantidade parcelas inválidas";
+          Sleep(2000);
+          gotoxy(32,cont+16);
+          cout<<"                             ";
+          gotoxy(32,cont+14);
+          cout<<"                               ";
+        }
+      }while(qtdParcelas<1 || qtdParcelas>3);
+      gotoxy(32,cont+17);
+      while(qtdParcelas<1 || qtdParcelas>3);
+      cout<<qtdParcelas<<" parcelas de "<< valorConsulta/qtdParcelas;
+      fflush(stdin);
+      gotoxy(32,cont+18);
+      cout<<"Desejar confirmar o pagamento ? [s/n]:";
+      opPagamento = getchar();
+      if (qtdParcelas =='s' || opPagamento=='S'){
+        for(int i=0;i<5;i++){
+          criaMenu(3,45,28,cont+20,BLUE,COR_LETRA2);
+          gotoxy(35,cont+21);
+          cout<<"PAGAMENTO EFETUADO COM SUCESSO!!";
+          Sleep(400);
+          criaMenu(3,45,28,cont+20,COR_LETRA2,BLUE);
+          gotoxy(35,cont+21);
+          cout<<"PAGAMENTO EFETUADO COM SUCESSO!!";
+          Sleep(400);
+        }
+          return;
+          exit(1);
+      }
+
+    break;
+
+
+
+  }
+  getch();
 }
 
-int converterParaInt(string str){
-    std::istringstream iss(str);
-    int retorno;
-    iss >> retorno;
-    return retorno;
-}
 
-void tratamentoData(int &diaU, int &mesU, int &anoU,int &cont){
+void tratamentoData(int &diaU, int &mesU, int &anoU, int cont)
+{
     fflush(stdin);
     int diaC,mesC,anoC;
-    int valida;
-    char c[2];
     gotoxy(40,3);
     dateSystem(diaC, mesC, anoC);
-    do{
-        valida=0;
-      switch(mesU){
-        case 1:
-          if(diaU<1 || diaU>31){
-            gotoxy(45,cont);
-            dia31(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 2:
-          //no bissexto
-          if((anoU % 4 == 0 && (anoU % 400 == 0 || anoU % 100 != 0)) && diaU<1 || diaU>29){
-            while(diaU<1 || diaU>29){
-              criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
-              gotoxy(45,cont+3);
-              cout<<"Dia informado é inválido!";
-              Sleep(1000);
-              textcolor(COR_LETRA1);
-              criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
-              gotoxy(44,cont+3);
-              clreol();
-              gotoxy(47,cont-1);
-              clreol();
 
-              gotoxy(47,cont-1);
-              cout << "/";
-              gotoxy(52,cont-1);
-              cout << "/";
-              gotoxy(49,cont-1);
-              cout<<mesU;
-              gotoxy(54,cont-1);
-              cout<<anoU;
-              gotoxy(44,cont-1);
-              cin>>diaU;
-            }
-          }
-          if((anoU % 4 != 0 && (anoU % 400 != 0 || anoU % 100 != 0)) && diaU<1 || diaU>28){
-            while(diaU<1 || diaU>28){
-              criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
-              gotoxy(45,cont+3);
-              cout<<"Dia informado é inválido!";
-              Sleep(1000);
-              textcolor(COR_LETRA1);
-              criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
-              gotoxy(44,cont+3);
-              clreol();
-              gotoxy(47,cont-1);
-              clreol();
-              gotoxy(47,cont-1);
-              cout << "/";
-              gotoxy(52,cont-1);
-              cout << "/";
-              gotoxy(49,cont-1);
-              cout<<mesU;
-              gotoxy(54,cont-1);
-              cout<<anoU;
-              gotoxy(44,cont-1);
-              cin>>diaU;
-              }
-          }
-        break;
-        case 3:
-          if(diaU<1 || diaU>31 ){
-            dia31(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 4:
-          if(diaU<1 || diaU>30){
-            dia30(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 5:
-          if(diaU<1 || diaU>31){
-            dia31(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 6:
-          if(diaU<1 || diaU>30 ){
-            dia30(diaU,mesU,anoU,cont);
-            getch();
-          }
-        break;
-        case 7:
-          if(diaU<1 || diaU>31){
-            dia31(diaU,mesU,anoU,cont);
-            getch();
-          }
-        break;
-        case 8:
-          if(diaU<1 || diaU>31){
-            dia31(diaU,mesU,anoU,cont);
-            getch();
-          }
-        break;
-        case 9:
-          if(diaU<1 || diaU>30){
-            dia30(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 10:
-          if(diaU<1 || diaU>31){
-            dia31(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 11:
-          if(diaU<1 || diaU>30){
-            dia30(diaU,mesU,anoU,cont);
-          }
-        break;
-        case 12:
-          if(diaU<1 || diaU>31){
-            dia31(diaU,mesU,anoU,cont);
-          }
-        break;
-      default:
-          criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
-          gotoxy(42,cont+3);
-          cout<<"Mes inválido!";
-          textcolor(COR_LETRA1);
-          criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
-          Sleep(1000);
-          gotoxy(42,cont+3);
-          clreol();
-
-          gotoxy(42,cont-1);
-          clreol();
-          gotoxy(47,cont-1);
-          cout << "/";
-          gotoxy(52,cont-1);
-          cout << "/";
-          gotoxy(44,cont-1);
-          cout<<diaU;
-          gotoxy(54,cont-1);
-          cout<<anoU;
-          gotoxy(49,cont-1);
-          cin>>mesU;
-
-      }
-      valida = dma(diaU,mesU,anoU,cont);
-    }while(valida==0);
-
-    while(anoU<anoC  || anoU>anoC+1){
-        criaMenu(3,15,43,cont+5,COR_LETRA2,LIGHTRED);
-        gotoxy(35,cont+3);
-        cout<<"Ano informado é inválido, digite os dois últimos digitos ";
-        if(anoU<anoC){
-          gotoxy(45,cont+5);
-          cout<<"Ano digitado já passou";
-        }
-        else{
-          gotoxy(35,cont+5);
-          cout<<"Ano digitado está muito distante ";
-        }
-        criaMenu(3,15,43,cont+1,COR_FUNDO,COR_LETRA1);
-        Sleep(2000);
-        gotoxy(35,cont+3);
-        clreol();
-        gotoxy(45,cont+5);
-        gotoxy(42,cont-1);
-        clreol();
-
-        gotoxy(47,cont-1);
+    do
+    {
+        criaMenu(3,15,43,cont+3,COR_LETRA2,BLACK);
+        gotoxy(37,cont-1);
+        cout<<"Informe a data da consulta";
+        criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
+        gotoxy(47,cont+1);
         cout << "/";
-        gotoxy(52,cont-1);
+        gotoxy(52,cont+1);
         cout << "/";
-        gotoxy(44,cont-1);
-        cout<<diaU;
-        gotoxy(49,cont-1);
-        cout<<mesU;
-        gotoxy(52,cont-1);
+        gotoxy(44,cont+1);
+        cin>>diaU;
+        gotoxy(49,cont+1);
+        cin>>mesU;
+        gotoxy(54,cont+1);
         cin>>anoU;
-    }
-    gotoxy(40,cont+4);
-    cout<<"data é totalmente válida!!";
-    Sleep(1000);
-}
-void dia31(int &diaU, int mesU, int anoU,int cont){
-   while(diaU<1 || diaU>31){
-      criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
-      gotoxy(45,cont+3);
-      cout<<"Dia informado é inválido!";
-      Sleep(1000);
-      textcolor(COR_LETRA1);
-      criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
-      gotoxy(44,cont+3);
-      clreol();
-      gotoxy(47,cont-1);
-      clreol();
-      gotoxy(47,cont-1);
-      cout << "/";
-      gotoxy(52,cont-1);
-      cout << "/";
-      gotoxy(49,cont-1);
-      cout<<mesU;
-      gotoxy(54,cont-1);
-      cout<<anoU;
-      gotoxy(44,cont-1);
-      cin>>diaU;
-    }
+        criaMenu(3,15,43,cont+3,COR_LETRA2,RED);
+
+        switch(mesU)
+        {
+            case 1:
+                //while(diaU<1 || diaU>31)
+                    dma(diaU,mesU,anoU,cont,31);
+            break;
+            case 2:
+              //no bissexto
+                if((anoU % 4 == 0 && (anoU % 400 == 0 || anoU % 100 != 0))){
+                    //while(diaU<1 || diaU>29)
+                    dma(diaU,mesU,anoU,cont,29);
+                }
+                if((anoU % 4 != 0 && (anoU % 400 != 0 || anoU % 100 != 0))){
+                    //while(diaU<1 || diaU>28)
+                    dma(diaU,mesU,anoU,cont,28);
+                }
+
+            break;
+            case 3:
+                //while(diaU<1 || diaU>31 )
+                dma(diaU,mesU,anoU,cont,31);
+
+            break;
+            case 4:
+                //while(diaU<1 || diaU>30)
+                dma(diaU,mesU,anoU,cont,30);
+
+            break;
+            case 5:
+                //while(diaU<1 || diaU>31)
+                dma(diaU,mesU,anoU,cont,31);
+
+            break;
+            case 6:
+                //while(diaU<1 || diaU>30)
+                dma(diaU,mesU,anoU,cont,30);
+
+            break;
+            case 7:
+                //while(diaU<1 || diaU>31)
+                dma(diaU,mesU,anoU,cont,31);
+
+            break;
+            case 8:
+                //while(diaU<1 || diaU>31)
+                dma(diaU,mesU,anoU,cont,31);
+
+            break;
+            case 9:
+                //while(diaU<1 || diaU>30)
+                dma(diaU,mesU,anoU,cont,30);
+
+            break;
+            case 10:
+                //while(diaU<1 || diaU>31)
+                dma(diaU,mesU,anoU,cont,31);
+
+            break;
+            case 11:
+                //while(diaU<1 || diaU>30)
+                dma(diaU,mesU,anoU,cont,30);
+            break;
+            case 12:
+                //while(diaU<1 || diaU>31)
+                dma(diaU,mesU,anoU,cont,31);
+
+            break;
+            default:
+                criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
+                gotoxy(42,cont+3);
+                cout<<"Mês inválido!";
+                textcolor(COR_LETRA1);
+                Sleep(1000);
+                gotoxy(42,cont+3);
+                cout<<"             ";
+        }
+
+    }while(mesU<1 || mesU>12);
+
+        gotoxy(40,cont+4);
+        cout<<"Data é totalmente válida!!";
+        Sleep(1000);
 }
 
-void dia30(int &diaU, int mesU, int anoU,int cont){
-   while(diaU<1 || diaU>30){
-      criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
-      gotoxy(45,cont+3);
-      cout<<"Dia informado é inválido!";
-      Sleep(1000);
-      textcolor(COR_LETRA1);
-      criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
-      gotoxy(44,cont+3);
-      clreol();
-      gotoxy(47,cont-1);
-      clreol();
-      gotoxy(47,cont-1);
-      cout << "/";
-      gotoxy(52,cont-1);
-      cout << "/";
-      gotoxy(44,cont-1);
-      cout<<mesU;
-      gotoxy(54,cont-1);
-      cout<<anoU;
-      gotoxy(47,cont-1);
-      cin>>diaU;
-    }
-}
-
-bool dma(int &diaU, int &mesU, int &anoU,int cont)
+void dma(int &diaU, int &mesU, int &anoU, int cont, int p)
 {
-    int diaS, mesS, anoS;
-    bool validar=1;
+    int diaS, mesS, anoS, j=0;
+    bool validar=0;
 
     dateSystem(diaS,mesS,anoS);
 
-    while((diaU<diaS) && (mesU<mesS) || (anoU<=anoS))
+    while((validar==0) || (diaU<1||diaU>p) || (anoU>anoS+1))
     {
-      criaMenu(3,15,43,cont+3,COR_LETRA2,LIGHTRED);
-      validar=0;
-      gotoxy(40,cont+3);
-      cout<<"Dia informado é inválido!";
-      Sleep(1000);
-      textcolor(COR_LETRA1);
-      criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
+        j++;
+        int levelCheck = 0;
+        ( diaS <= diaU ) ? levelCheck++ : levelCheck = levelCheck ;
 
-      gotoxy(40,cont+3);
-      clreol();
+        ( mesS <= mesU ) ? levelCheck++ : levelCheck = levelCheck ;
 
-      gotoxy(44,cont-1);
-      clreol();
+        ( anoS <= anoU ) ? levelCheck++ : levelCheck = levelCheck ;
 
-      gotoxy(47,cont-1);
-      cout << "/";
+        ((( diaS <= diaU ) && ( anoS <= anoU ) )) ? levelCheck++ : levelCheck = levelCheck ;
 
-      gotoxy(52,cont-1);
-      cout << "/";
+        ((( diaS <= diaU ) && ( mesS <= mesU) )) ? levelCheck++ : levelCheck = levelCheck ;
 
-      gotoxy(44,cont-1);
-      cin>>diaU;
+        ( anoS < anoU ) ? levelCheck++ : levelCheck = levelCheck ;
 
-      gotoxy(49,cont-1);
-      cin>>mesU;
-
-      gotoxy(54,cont-1);
-      cin>>anoU;
+        if( j > 1)
+        {
+            j = 0;
+            validar=0;
+            gotoxy(44,cont+3);
+            cout << "Data inválida!";
+            Sleep(2000);
+            gotoxy(44,cont+3);
+            cout << "               ";
+            criaMenu(3,15,43,cont,COR_FUNDO,COR_LETRA1);
+            gotoxy(47,cont+1);
+            cout << "/";
+            gotoxy(52,cont+1);
+            cout << "/";
+            gotoxy(44,cont+1);
+            cin>>diaU;
+            gotoxy(49,cont+1);
+            cin>>mesU;
+            gotoxy(54,cont+1);
+            cin>>anoU;
+            criaMenu(3,15,43,cont+3,COR_LETRA2,RED);
+        }
+        else
+        {
+            if(((levelCheck >= 2) && (anoS < anoU)||(levelCheck == 5)))
+            {
+                validar = 1;
+            }
+            else
+            {
+                validar=0;
+                gotoxy(44,cont+3);
+                cout << "Data inválida!";
+                Sleep(2000);
+                gotoxy(44,cont+3);
+                cout << "               ";
+            }
+        }
     }
-    return validar;
 }
+
+void reagendarConsulta(char cpfCli[], int cpfSec)
+{
+    fstream lerConsulta;
+    consulta readConsulta;
+
+    criaMenu(4,93,5,16,COR_LOGO,COR_LETRA2);
+    gotoxy(50 - (14/2), 17);
+    cout << "REAGENDAMENTO";
+    mostraInfCliente(cpfCli,cpfSec);
+    criaMenu(10,93,5,19,COR_LETRA2,COR_LETRA1);
+
+    lerConsulta.open("consultas.txt",ios::in);
+        lerConsulta.read((char*)(&readConsulta),sizeof(consulta));
+    while(lerConsulta && !lerConsulta.eof()){
+        if(strcmp(cpfCli,readConsulta.cpfCli)==0){
+            textcolor(BLACK);
+            gotoxy(30,20);
+            cout<<readConsulta.dataConsulta;
+            gotoxy(30,21);
+            cout<<readConsulta.crm;
+            gotoxy(30,22);
+            cout<<readConsulta.cpfCli;
+            gotoxy(30,23);
+            cout<<readConsulta.tipoConsulta;
+            gotoxy(30,24);
+            cout<<readConsulta.turno;
+            break;
+        }
+        lerConsulta.read((char*)(&readConsulta),sizeof(consulta));
+    }
+    lerConsulta.close();
+
+
+}
+

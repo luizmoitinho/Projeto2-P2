@@ -884,7 +884,7 @@ void tratamentoData(int &diaU, int &mesU, int &anoU,int &cont){
 		valida = dma(diaU,mesU,anoU,cont);
     }while(valida==0);
 
-    while((anoU<anoC  || anoU>anoC+1) && valida==0){
+    while((anoU<anoC  &&  anoU>anoC+1) || valida==0){
         criaMenu(3,15,43,cont+5,COR_LETRA2,LIGHTRED);
         gotoxy(35,cont+3);
         cout<<"Ano informado é inválido, digite os dois últimos digitos ";

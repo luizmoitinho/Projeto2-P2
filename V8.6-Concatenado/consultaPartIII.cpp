@@ -15,22 +15,25 @@ void cadConsulta();
 //==================================================
 
 
- typedef struct{
-  char nome[40]=" ";
-  char cpf[12]=" ";
-  char sexo[15]=" ";
-  char dataNasc[15]=" ";
-  char telefone[20]=" ";
-  char nomePai[40]=" ";
-  char nomeMae[40]=" ";
-  char endRua[40]=" ";
-  char endBairro[30]=" ";
-  char cidade[25]=" ";
-  char UF[3]=" ";
-  char email[40]=" ";
-  char obs[50]=" ";
-  char cep[10]=" ";
+
+typedef struct{
+  char nome[40];
+  char cpf[12];
+  char sexo[15];
+  char dataNasc[15];
+  char telefone[20];
+  char nomePai[40];
+  char nomeMae[40];
+  char endRua[40];
+  char endBairro[30];
+  char cidade[25];
+  char UF[3];
+  char email[40];
+  char obs[50];
+  char cep[10];
+  int ativo;
 }cliente;
+
 typedef struct{
     int cod; // 0-Deletado ou Não cadastrado | 1-Cadastrado
     int senha;
