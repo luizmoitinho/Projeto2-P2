@@ -32,10 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="consultas.h" />
-		<Unit filename="design.h" />
+		<Unit filename="designConsultas.h" />
+		<Unit filename="fnConsultas.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="structs.h" />
+		<Unit filename="structsConsultas.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

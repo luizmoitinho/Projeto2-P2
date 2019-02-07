@@ -1,0 +1,128 @@
+# depslib dependency file v1.0
+1535679598 source:c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535563449 c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\structs.h
+
+1535132618 c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\design.h
+
+1535739585 c:\users\luizinho\desktop\projeto - 2\v8.2\projeto2-p2\v8.2-datas\consultas.h
+
+1535836913 source:c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.5-concatenado\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535839702 c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.5-concatenado\structs.h
+
+1535132618 c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.5-concatenado\design.h
+
+1535899730 c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.5-concatenado\consultas.h
+
+1535978532 source:c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.6-concatenado\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535975258 c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.6-concatenado\structs.h
+
+1535132618 c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.6-concatenado\design.h
+
+1535980213 c:\users\luizinho\desktop\atualizar\projeto2-p2\v8.6-concatenado\consultas.h
+
+1535978532 source:c:\users\luizinho\desktop\atualizar\projeto2-p2\v9.0 - ponteiros\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535990229 c:\users\luizinho\desktop\atualizar\projeto2-p2\v9.0 - ponteiros\structs.h
+
+1535132618 c:\users\luizinho\desktop\atualizar\projeto2-p2\v9.0 - ponteiros\design.h
+
+1536008217 c:\users\luizinho\desktop\atualizar\projeto2-p2\v9.0 - ponteiros\consultas.h
+
+1535978534 source:e:\v10.0 - alocação dinamica\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1535990230 e:\v10.0 - alocação dinamica\structs.h
+
+1535132620 e:\v10.0 - alocação dinamica\design.h
+
+1536008630 e:\v10.0 - alocação dinamica\consultas.h
+
+1535978534 source:c:\users\rober\desktop\clinica\clinica_consulta\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structs.h"
+	"design.h"
+	"consultas.h"
+
+1536026491 source:c:\users\luizinho\desktop\projeto\clinica_consulta\main.cpp
+	<iostream>
+	<windows.h>
+	<stdlib.h>
+	<string.h>
+	<sstream>
+	<fstream>
+	<conio2.h>
+	<time.h>
+	"structsConsultas.h"
+	"designConsultas.h"
+	"fnConsultas.h"
+
+1535990230 c:\users\luizinho\desktop\projeto\clinica_consulta\structsconsultas.h
+
+1535132620 c:\users\luizinho\desktop\projeto\clinica_consulta\designconsultas.h
+
+1536026781 c:\users\luizinho\desktop\projeto\clinica_consulta\fnconsultas.h
+
